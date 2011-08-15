@@ -23,8 +23,8 @@ OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
 
 def client
   OAuth2::Client.new(
-    '3MVG9y6x0357Hled43uoiWgfZ.8DWvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP', 
-    '3746757173514830663', 
+    ENV['key'], 
+    ENV['secret'], 
     :site => INSTANCE_URL,
     :authorize_url =>'/services/oauth2/authorize', 
     :token_url => '/services/oauth2/token',

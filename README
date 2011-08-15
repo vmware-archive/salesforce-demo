@@ -21,8 +21,9 @@ vmc push salesforce-demo
 
 You do not need any additional services
 
-vmc env-add salesforce-demo key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
-vmc env-add salesforce-demo secret=3746747173514820663
+vmc env-add salesforce-demo salesforce_key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
+vmc env-add salesforce-demo salesforce_secret=3746747173514820663
+vmc env-add salesforce-demo salesforce_instance_url=https://c.na9.visual.force.com
 
 Then go to your cloud foundry app to test. Remember to use SSL
 

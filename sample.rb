@@ -18,13 +18,13 @@ module OAuth2
   end
 end
 
-INSTANCE_URL = 'https://na9.salesforce.com'
+INSTANCE_URL = ENV['salesforce_instance_url']
 OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
 
 def client
   OAuth2::Client.new(
-    ENV['key'], 
-    ENV['secret'], 
+    ENV['salesforce_key'], 
+    ENV['salesforce_secret'], 
     :site => INSTANCE_URL,
     :authorize_url =>'/services/oauth2/authorize', 
     :token_url => '/services/oauth2/token',

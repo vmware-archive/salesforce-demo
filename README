@@ -1,0 +1,24 @@
+Salesforce Demo
+Barebones demo REST client for Salesforce
+Updated the source code from a recipe submitted here to use the latest version of the OAuth2 gem
+http://developer.force.com/cookbook/recipe/interact-with-the-forcecom-rest-api-from-ruby
+
+Still had to monkey patch one item since Salesforce is using an old draft of OAuth 2
+
+More info here: http://www.salesforce.com/us/developer/docs/api_rest/Content/quickstart_code.htm
+
+Using Cloud Foundry
+Its easy to use CloudFoundry to test Salesforce REST API since CloudFoundry supports SSL
+
+Register at http://cloudfoundry.com/
+
+vmc target api.cloudfoundry.com
+vmc login
+*Enter Credentials
+
+vmc push salesforce-demo
+
+You do not need any additional services
+
+vmc env-add salesforce-demo key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
+vmc env-add salesforce-demo secret=3746747173514820663

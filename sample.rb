@@ -19,7 +19,7 @@ module OAuth2
 end
 
 INSTANCE_URL = ENV['salesforce_instance_url']
-OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
+SALESFORCE_OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
 
 def client
   OAuth2::Client.new(
@@ -34,6 +34,7 @@ def client
   )
 end
 
+enable :sessions
 
 def showAccounts access_token 
   response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'}).parsed
@@ -94,19 +95,29 @@ get '/' do
 end
 
 get '/oauth' do
-  redirect client.auth_code.authorize_url(
-    :response_type => 'code',
-    :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback"
-  )
+  if session.has_key? 'access_token'
+    redirect '/oauth/callback'
+  else
+    redirect client.auth_code.authorize_url(
+      :response_type => 'code',
+      :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback"
+    )
+  end
 end
 
 get '/oauth/callback' do
   name = 'My New Org'
 
   output = '<html><body><tt>'
-    access_token = client.auth_code.get_token(params[:code], :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code')
-    access_token.options = OPTIONS
+    if session.has_key? 'access_token'
+      access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+    else
+      access_token = client.auth_code.get_token(params[:code], :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code')
+      session['access_token'] = access_token.token
+      access_token.options = SALESFORCE_OPTIONS.clone
+    end
     
+      
     begin
       output += showAccounts access_token    
       id = createAccount access_token, name

@@ -9,6 +9,7 @@ module OAuth2
   class AccessToken
     def request(verb, path, opts={}, &block)
       set_token(opts)
+      puts "%%%% OPTS = #{opts}"
       @client.request(verb, path, opts, &block)
     end
     
@@ -39,11 +40,11 @@ enable :sessions
 def showAccounts access_token 
   response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'}).parsed
 
-  output = ''
+  output = '<ul>'
   response['records'].each do |record| 
-    output += "#{record['Id']}, #{record['Name']}<br/>"
+    output += "<li>#{record['Id']}, #{record['Name']}, <a href='/account/#{record['Id']}.json'>Show</a>, <a href='/account/edit/#{record['Id']}'>Edit</a></li>, <a href='/account/delete/#{record['Id']}'>Delete</a></li>"
   end
-  output += '<br/>'
+  output += '</ul>'
 end
 
 def createAccount access_token, name
@@ -53,13 +54,13 @@ def createAccount access_token, name
 end
 
 def showAccount access_token, id
-  response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}").parsed
+  response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}", :headers => {'Content-type' => 'application/json'}).parsed
 
-  output = ''
+  output = '<ul>'
   response.each do |key, value|
-    output += "#{key}:#{value}<br/>"
+    output += "<li>#{key}:#{value.inspect}</li>"
   end
-  output += '<br/>'
+  output += '</ul>'
 end
 
 def updateAccount access_token, id, new_name, city
@@ -105,6 +106,69 @@ get '/oauth' do
   end
 end
 
+get '/accounts' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  output = "<html><body><a href='/accounts.json'>JSON</a><br /><tt>"
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+  output += showAccounts access_token 
+  output += '<tt></body></html>'
+end
+
+get '/accounts.json' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'})
+  response.body
+end
+
+get '/account/:account_id.json' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/sobjects/Account/#{@account_id}", :headers => {'Content-type' => 'application/json'})
+  response.body
+end
+
+get '/accounts/create' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  output = '<html><body><tt>'
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+  if (params.has_key? 'name')
+    id = createAccount access_token, params['name']
+  end
+  output += '<tt></body></html>'
+end
+
+get '/account/edit/:account_id' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  output = '<html><body><tt>'
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+   if (params.has_key? 'name')
+     output += updateAccount access_token, @account_id, params['name'] + ', Inc', 'San Francisco'
+  end
+  output += showAccount access_token, @account_id
+  output += '<tt></body></html>'
+end
+
+get '/account/delete/:account_id' do
+  unless session.has_key? 'access_token'
+     redirect '/oauth'
+  end
+  output = '<html><body><tt>'
+  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
+  output += deleteAccount access_token, @account_id
+  output += '<tt></body></html>'
+end
+
 get '/oauth/callback' do
   name = 'My New Org'
 
@@ -116,22 +180,8 @@ get '/oauth/callback' do
       session['access_token'] = access_token.token
       access_token.options = SALESFORCE_OPTIONS.clone
     end
-    
-      
-    begin
-      output += showAccounts access_token    
-      id = createAccount access_token, name
-      output += "Created record #{id}<br/><br/>"
-      output += showAccounts access_token
-      output += showAccount access_token, id
-      output += updateAccount access_token, id, name + ', Inc', 'San Francisco'
-      output += showAccount access_token, id
-      output += showAccounts access_token
-      output += deleteAccount access_token, id
-      output += showAccounts access_token
-    rescue OAuth2::Error => e
-      output += e.response.parsed.inspect 
-    end
+
+    output += "<ul><li><a href='/accounts'>Accounts</a></li></ul>"
 
   output += '<tt></body></html>'
 end

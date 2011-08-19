@@ -9,7 +9,11 @@ def access_token
   if session.has_key? 'salesforce_access_token'
     return OAuth2::AccessToken.new(client, session['salesforce_access_token'], SALESFORCE_OPTIONS.clone)
   else
-    redirect '/'
+    session['url'] = request.path
+    redirect client.auth_code.authorize_url(
+      :response_type => 'code',
+      :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback"
+    )
   end
 end
 

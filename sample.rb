@@ -10,21 +10,14 @@ require 'oauth2_patch'
 enable :sessions
 
 get '/' do
-  if session.has_key? 'access_token'
-    redirect '/oauth/callback'
-  else
-    redirect client.auth_code.authorize_url(
-      :response_type => 'code',
-      :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback"
-    )
-  end
+  output = '<html><title>Salesforce Demo</title><body><h1>Salesforce Demo</h1><tt>'
+  output += "<ul><li><a href='/accounts'>Accounts</a></li></ul>"
+  output += '<tt></body></html>'
 end
 
 get '/oauth/callback' do
-  output = '<html><body><tt>'
   get_access_token params['code'] if (params['code'])
-  output += "<ul><li><a href='/accounts'>Accounts</a></li></ul>"
-  output += '<tt></body></html>'
+  redirect session['url'] || '/'
 end
 
 get '/accounts' do

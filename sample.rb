@@ -9,7 +9,6 @@ module OAuth2
   class AccessToken
     def request(verb, path, opts={}, &block)
       set_token(opts)
-      puts "%%%% OPTS = #{opts}"
       @client.request(verb, path, opts, &block)
     end
     
@@ -37,42 +36,60 @@ end
 
 enable :sessions
 
-def showAccounts access_token 
-  response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'}).parsed
+def showAccounts access_token
+  begin
+    response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'}).parsed
 
-  output = '<ul>'
-  response['records'].each do |record| 
-    output += "<li>#{record['Id']}, #{record['Name']}, <a href='/account/#{record['Id']}.json'>Show</a>, <a href='/account/edit/#{record['Id']}'>Edit</a></li>, <a href='/account/delete/#{record['Id']}'>Delete</a></li>"
+    output = '<ul>'
+    response['records'].each do |record|
+      output += "<li>#{record['Id']}, #{record['Name']}, <a href='/account/#{record['Id']}.json'>Show</a>, <a href='/account/edit/#{record['Id']}'>Edit</a>, <a href='/account/delete/#{record['Id']}'>Delete</a></li>"
+    end
+    output += '</ul>'
+  rescue OAuth2::Error => e
+      e.response.inspect
   end
-  output += '</ul>'
 end
 
 def createAccount access_token, name
-  response = access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/", :body =>"{\"Name\": \"#{name}\"}", :headers => {'Content-type' => 'application/json'}).parsed
-
-  response['id']
+  begin
+    response = access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/", :body =>"{\"Name\": \"#{name}\"}", :headers => {'Content-type' => 'application/json'}).parsed
+    response['id']
+  rescue OAuth2::Error => e
+      e.response.inspect
+  end
 end
 
 def showAccount access_token, id
-  response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}", :headers => {'Content-type' => 'application/json'}).parsed
+  begin
+    response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}", :headers => {'Content-type' => 'application/json'}).parsed
 
-  output = '<ul>'
-  response.each do |key, value|
-    output += "<li>#{key}:#{value.inspect}</li>"
+    output = '<ul>'
+    response.each do |key, value|
+      output += "<li>#{key}:#{value.inspect}</li>"
+    end
+    output += '</ul>'
+  rescue OAuth2::Error => e
+      e.response.inspect
   end
-  output += '</ul>'
 end
 
 def updateAccount access_token, id, new_name, city
-  access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}?_HttpMethod=PATCH", :body => "{\"Name\":\"#{new_name}\",\"BillingCity\":\"#{city}\"}", :headers => {'Content-type' => 'application/json'})
 
-  'Updated record<br/><br/>'
+  begin
+    access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}?_HttpMethod=PATCH", :body => "{\"Name\":\"#{new_name}\",\"BillingCity\":\"#{city}\"}", :headers => {'Content-type' => 'application/json'})
+    'Updated record<br/><br/>'
+  rescue OAuth2::Error => e
+      e.response.inspect
+  end
 end
 
 def deleteAccount access_token, id
-  access_token.delete("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}")
-
-  'Deleted record<br/><br/>'
+  begin
+    access_token.delete("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}")
+    'Deleted record<br/><br/>'
+  rescue OAuth2::Error => e
+      e.response.inspect
+  end
 end
 
 get '/' do
@@ -110,7 +127,7 @@ get '/accounts' do
   unless session.has_key? 'access_token'
      redirect '/oauth'
   end
-  output = "<html><body><a href='/accounts.json'>JSON</a><br /><tt>"
+  output = "<html><body><a href='/accounts.json'>JSON</a><br /><a href='/accounts/create?name='>New Account</a><br /><tt>"
   access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
   output += showAccounts access_token 
   output += '<tt></body></html>'
@@ -125,12 +142,12 @@ get '/accounts.json' do
   response.body
 end
 
-get '/account/:account_id.json' do
+get '/account/:account_id.json' do |account_id|
   unless session.has_key? 'access_token'
      redirect '/oauth'
   end
   access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/sobjects/Account/#{@account_id}", :headers => {'Content-type' => 'application/json'})
+  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/sobjects/Account/#{account_id}", :headers => {'Content-type' => 'application/json'})
   response.body
 end
 
@@ -140,32 +157,41 @@ get '/accounts/create' do
   end
   output = '<html><body><tt>'
   access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  if (params.has_key? 'name')
-    id = createAccount access_token, params['name']
+  name = params['name'] rescue 'Acme'
+  n = params['n'].to_i rescue 1
+  n.times do |i|
+    id = createAccount access_token, "#{name} #{i}"
+    output += "Created account <a href='/account/#{id}.json'>Account ID=#{id}</a><br />"
   end
+
   output += '<tt></body></html>'
 end
 
-get '/account/edit/:account_id' do
+get '/account/edit/:account_id' do |account_id|
   unless session.has_key? 'access_token'
      redirect '/oauth'
   end
   output = '<html><body><tt>'
   access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-   if (params.has_key? 'name')
-     output += updateAccount access_token, @account_id, params['name'] + ', Inc', 'San Francisco'
-  end
-  output += showAccount access_token, @account_id
+   if (params.has_key? 'name' && params['name'] )
+     output += updateAccount access_token, account_id, params['name'] + ', Inc', 'San Francisco'
+     output += "Updated account <a href='/account/#{account_id}.json'>Account ID=#{account_id}</a>"
+  end 
   output += '<tt></body></html>'
 end
 
-get '/account/delete/:account_id' do
+get '/account/delete/:account_id' do |account_id|
   unless session.has_key? 'access_token'
      redirect '/oauth'
   end
   output = '<html><body><tt>'
   access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  output += deleteAccount access_token, @account_id
+  if (account_id)
+    output += "<p>Deleting #{account_id}</p>"
+    output += deleteAccount access_token, account_id
+  else
+    output += request.inspect
+  end
   output += '<tt></body></html>'
 end
 

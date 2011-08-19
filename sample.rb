@@ -4,115 +4,12 @@ require 'oauth2'
 require 'json'
 require 'cgi'
 require 'net/https'
-
-module OAuth2
-  class AccessToken
-    def request(verb, path, opts={}, &block)
-      set_token(opts)
-      @client.request(verb, path, opts, &block)
-    end
-    
-    def options=(opts)
-      @options = opts
-    end
-  end
-end
-
-INSTANCE_URL = ENV['salesforce_instance_url']
-SALESFORCE_OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
-
-def client
-  OAuth2::Client.new(
-    ENV['salesforce_key'], 
-    ENV['salesforce_secret'], 
-    :site => INSTANCE_URL,
-    :authorize_url =>'/services/oauth2/authorize', 
-    :token_url => '/services/oauth2/token',
-    :ssl=>{
-    :verify=>false
-    }
-  )
-end
+require 'salesforce'
+require 'oauth2_patch'
 
 enable :sessions
 
-def showAccounts access_token
-  begin
-    response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'}).parsed
-
-    output = '<ul>'
-    response['records'].each do |record|
-      output += "<li>#{record['Id']}, #{record['Name']}, <a href='/account/#{record['Id']}.json'>Show</a>, <a href='/account/edit/#{record['Id']}'>Edit</a>, <a href='/account/delete/#{record['Id']}'>Delete</a></li>"
-    end
-    output += '</ul>'
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
-def createAccount access_token, name
-  begin
-    response = access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/", :body =>"{\"Name\": \"#{name}\"}", :headers => {'Content-type' => 'application/json'}).parsed
-    response['id']
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
-def showAccount access_token, id
-  begin
-    response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}", :headers => {'Content-type' => 'application/json'}).parsed
-
-    output = '<ul>'
-    response.each do |key, value|
-      output += "<li>#{key}:#{value.inspect}</li>"
-    end
-    output += '</ul>'
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
-def updateAccount access_token, id, new_name, city
-
-  begin
-    access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}?_HttpMethod=PATCH", :body => "{\"Name\":\"#{new_name}\",\"BillingCity\":\"#{city}\"}", :headers => {'Content-type' => 'application/json'})
-    'Updated record<br/><br/>'
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
-def deleteAccount access_token, id
-  begin
-    access_token.delete("#{INSTANCE_URL}/services/data/v20.0/sobjects/Account/#{id}")
-    'Deleted record<br/><br/>'
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
 get '/' do
-"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
-<html>
-<head>
-<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
-<title>REST/OAuth Example</title>
-</head>
-<body>
-<script type=\"text/javascript\" language=\"javascript\">
-	if (location.protocol != \"https:\") {
-		document.write(\"OAuth will not work correctly from plain http. \"+
-				\"Please use an https URL.\");
-	} else {
-		document.write(\"<a href=\\\"oauth\\\">Click here to retrieve contacts from Salesforce via REST/OAuth.</a>\");
-	}
-</script>
-</body>
-</html>"
-end
-
-get '/oauth' do
   if session.has_key? 'access_token'
     redirect '/oauth/callback'
   else
@@ -123,44 +20,41 @@ get '/oauth' do
   end
 end
 
+get '/oauth/callback' do
+  output = '<html><body><tt>'
+  get_access_token params['code'] if (params['code'])
+  output += "<ul><li><a href='/accounts'>Accounts</a></li></ul>"
+  output += '<tt></body></html>'
+end
+
 get '/accounts' do
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
   output = "<html><body><a href='/accounts.json'>JSON</a><br /><a href='/accounts/create?name='>New Account</a><br /><tt>"
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  output += showAccounts access_token 
+  output += show_all 'account'
   output += '<tt></body></html>'
 end
 
 get '/accounts.json' do
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/query/?q=#{CGI::escape('SELECT Name, Id from Account LIMIT 100')}", :headers => {'Content-type' => 'application/json'})
-  response.body
+  response = show_all 'account', {:raw => true}
+  response
 end
 
-get '/account/:account_id.json' do |account_id|
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/sobjects/Account/#{account_id}", :headers => {'Content-type' => 'application/json'})
-  response.body
+get '/account/:account_id' do |account_id|
+  output = "<html><body><a href='/account/raw/#{account_id}.json'>JSON</a><br /><tt>"
+  output += show_one 'account', account_id
+  output += '<tt></body></html>'
+end
+
+get '/account/raw/:account_id.json' do |account_id|
+  response = show_one 'account', account_id, {:raw => true}
+  response
 end
 
 get '/accounts/create' do
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
   output = '<html><body><tt>'
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
   name = params['name'] rescue 'Acme'
   n = params['n'].to_i rescue 1
   n.times do |i|
-    id = createAccount access_token, "#{name} #{i}"
+    id = create 'account', "#{name} #{i}"
     output += "Created account <a href='/account/#{id}.json'>Account ID=#{id}</a><br />"
   end
 
@@ -168,46 +62,23 @@ get '/accounts/create' do
 end
 
 get '/account/edit/:account_id' do |account_id|
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
   output = '<html><body><tt>'
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
    if (params.has_key? 'name' && params['name'] )
-     output += updateAccount access_token, account_id, params['name'] + ', Inc', 'San Francisco'
+     output += update 'account', account_id, "{'Name' : '#{params['name']}'}"
      output += "Updated account <a href='/account/#{account_id}.json'>Account ID=#{account_id}</a>"
   end 
   output += '<tt></body></html>'
 end
 
 get '/account/delete/:account_id' do |account_id|
-  unless session.has_key? 'access_token'
-     redirect '/oauth'
-  end
   output = '<html><body><tt>'
-  access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
   if (account_id)
     output += "<p>Deleting #{account_id}</p>"
-    output += deleteAccount access_token, account_id
+    output += delete 'account', account_id
   else
     output += request.inspect
   end
   output += '<tt></body></html>'
 end
 
-get '/oauth/callback' do
-  name = 'My New Org'
 
-  output = '<html><body><tt>'
-    if session.has_key? 'access_token'
-      access_token = OAuth2::AccessToken.new(client, session['access_token'], SALESFORCE_OPTIONS.clone)
-    else
-      access_token = client.auth_code.get_token(params[:code], :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code')
-      session['access_token'] = access_token.token
-      access_token.options = SALESFORCE_OPTIONS.clone
-    end
-
-    output += "<ul><li><a href='/accounts'>Accounts</a></li></ul>"
-
-  output += '<tt></body></html>'
-end

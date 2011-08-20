@@ -48,9 +48,9 @@ def show_all object_type, options={}
   end
 end
 
-def create object_type, name
+def create object_type, json
   begin
-    response = access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/#{object_type.capitalize}/", :body =>"{\"Name\": \"#{name}\"}", :headers => {'Content-type' => 'application/json'}).parsed
+    response = access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/#{object_type.capitalize}/", :body =>json, :headers => {'Content-type' => 'application/json'}).parsed
     return response['id']
   rescue OAuth2::Error => e
     return e.response.inspect

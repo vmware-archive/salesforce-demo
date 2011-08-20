@@ -1,7 +1,7 @@
 get '/leads' do
-  output = "<html><body><a href='/leads.json'>JSON</a><br /><a href='/leads/create?name='>New Lead</a><br /><tt>"
-  output += show_all 'lead'
-  output += '<tt></body></html>'
+  @controller = 'leads'
+  @data = show_all 'lead'
+  haml :show_all
 end
 
 get '/leads.json' do

@@ -67,7 +67,7 @@ def show_one object_type, id, options={}
       response_parsed = response.parsed
       output = '<ul>'
       response_parsed.each do |key, value|
-        output += "<li>#{key}:#{value.inspect}</li>"
+        output += "<li>#{key}:#{value}</li>" unless value.nil?
       end
       output += '</ul>'
       return output

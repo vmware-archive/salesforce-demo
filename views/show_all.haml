@@ -2,8 +2,8 @@
   %body
     %ul
       %li
-        %a{:href=>'/#{@controller}.json'} JSON
+        %a{:href=>"/#{@controller}.json"} JSON
       %li
-        %a{:href=>'/#{@controller}/create?name='} New
+        %a{:href=>"/#{@controller}/create?name="} New
     %tt
       = @data

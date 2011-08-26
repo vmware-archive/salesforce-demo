@@ -4,12 +4,15 @@ require 'oauth2'
 require 'json'
 require 'cgi'
 require 'net/https'
-require 'salesforce'
-require 'oauth2_patch'
-require 'opportunity.rb'
-require 'Account.rb'
-require 'Lead.rb'
-
+require 'oauth2'
+require_relative 'oauth2_patch'
+require_relative 'salesforce'
+require_relative 'opportunity'
+require_relative 'Account'
+require_relative 'Lead'
+require 'linkedin'
+require_relative 'linkedin_client'
+require_relative 'Company'
 enable :sessions
 
 get '/' do

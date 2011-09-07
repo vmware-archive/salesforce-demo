@@ -7,7 +7,9 @@ To seed data simply:
 
 * Go into the Linkedin Section and perform a query
 * Add the desired objects to your shopping cart
-* Once you have enough data: Navigate to the Salesforce object type of choice(Lead, Opportunity or Account) and click Generate
+* Once you have enough data:
+    * Navigate to the Salesforce object type of choice(Lead, Opportunity or Account)
+    * Click Generate
 
 You can try it live at https://salesforce-demo.cloudfoundry.com/
 

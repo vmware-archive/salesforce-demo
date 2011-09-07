@@ -1,18 +1,16 @@
-.grid_12
-  %ul.menu
-    %li
-      %a{:href=>"/#{@controller}.json"} JSON
-    %li
-      %a{:href=>"/#{@controller}/create?name="} New
-.clear
-.grid_8
-  -unless @data.nil?
-    - if (@object_type == 'company')
-      %ul
-      - @data.each do |record|
-        %li
-          = "#{record.id}, #{record.name}, <a href='/#{@object_type}/#{record.id}'>Show</a></li>"
-    - else
-      = @data
-  -else
-    %p No records.
+.grid_8.prefix_2
+  .white.data
+    -unless @data.nil?
+      - if (@object_type == 'company')
+        %ul
+        - @data.each do |record|
+          %li
+            %a{:href => "/#{@object_type}/#{record.id}"}
+              = "#{record.name}"
+      - else
+        %a.grid_4{:href=>"/#{@controller}.json"} JSON
+        %a.grid_4{:href=>"/#{@controller}/create?name="} New
+        .clear
+        = @data
+    -else
+      %p No records.

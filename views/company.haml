@@ -1,9 +1,6 @@
-.grid_12
-  %ul.grid_6
-    %li.alpha
-      %a{:href=> "/company/raw/#{@company.id}.json"} JSON
-    %li.omega
-      %a{:href=> "/company/add/#{@company.id}.json"} Add to Cart
+%a.grid_6{:href=> "/company/raw/#{@company.id}.json"} JSON
+%a.grid_6{:href=> "/company/add/#{@company.id}.json"} Add to Cart
 .clear
-.grid_8
-  = hashie_to_ul @company
+.grid_12
+  .white.data
+    = hashie_to_ul @company

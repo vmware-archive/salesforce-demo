@@ -30,7 +30,7 @@
         .grid_4
           .white
             %h3 Cart
-            %ul
+            %ul.cart
               - @cart.each do |company|
                 %li
                   %a{:href=> "/company/#{company['id']}"}

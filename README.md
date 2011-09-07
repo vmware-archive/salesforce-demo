@@ -1,9 +1,10 @@
 # Salesforce Demo
 
 ## Functionality
-This is a simple Sinatra Web App which can be used to populate demo data in a Salesforce instance by seeding it with public company data from LinkedIn.
+This is a Web App which can be used to populate demo data in a Salesforce instance by seeding it with public company data from LinkedIn.
 The data that can be generated includes: Leads, Opportunities and Accounts.
-To seed data simply
+To seed data simply:
+
 * Go into the Linkedin Section and perform a query
 * Add the desired objects to your shopping cart
 * Once you have enough data: Navigate to the Salesforce object type of choice(Lead, Opportunity or Account) and click Generate

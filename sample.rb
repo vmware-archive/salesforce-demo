@@ -13,13 +13,25 @@ require_relative 'Lead'
 require 'linkedin'
 require_relative 'linkedin_client'
 require_relative 'Company'
+require 'redis'
 enable :sessions
+
+
+configure do
+  services = JSON.parse(ENV['VCAP_SERVICES'])
+    redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+    redis = services[redis_key].first['credentials']
+    redis_conf = {:host => redis['hostname'], :port => redis['port'], :password => redis['password']}
+    @@redis = Redis.new redis_conf
+end
 
 get '/' do
   @cart = []
-  if (session[:recent_companies])
-    session[:recent_companies].each do |key, json|
-      @cart << JSON::parse(json)
+  redis_data = @@redis.smembers cart_id
+  if (redis_data)
+    redis_data.each do |key|
+      json = @@redis.get key
+      @cart << JSON.parse(json)
     end
   end
   haml :index
@@ -28,5 +40,9 @@ end
 get '/oauth/callback' do
   get_access_token params[:code] if (params[:code])
   redirect session['url'] || '/'
+end
+
+def cart_id
+ return "session_#{request.session_options[:id]}_cart"
 end
 

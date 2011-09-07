@@ -5,4 +5,5 @@ gem 'oauth2'
 gem 'json'
 gem 'haml'
 gem 'linkedin'
+gem 'redis'
 

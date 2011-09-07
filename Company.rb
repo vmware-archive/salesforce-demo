@@ -29,9 +29,7 @@ get '/company/:company_id' do |company_id|
   @company = nil
   begin
     @company = lnk_client.company({:id => company_id, :fields => COMPANY_FIELDS})
-    session[:recent_companies] = {} unless session[:recent_companies]
-    session[:recent_companies][company_id] = @company.to_json
-    puts "Session  #{session[:recent_companies].inspect}"
+    @@redis.set "company_#{company_id}", @company.to_json
   rescue OAuth2::Error => e
      return e.response.inspect
   end
@@ -43,10 +41,8 @@ get '/company/raw/:company_id.json' do |company_id|
 end
 
 get  '/company/add/:company_id.json' do |company_id|
-      puts "Session**** #{session[:recent_companies].inspect}"
-  if session[:recent_companies] && session[:recent_companies][company_id]
-    session[:companies_in_cart] = {} unless session[:companies_in_cart]
-    session[:companies_in_cart][company_id] = session[:recent_companies][company_id]
+  if @@redis.get "company_#{company_id}"
+    @@redis.sadd cart_id, "company_#{company_id}"
     output = "Added #{company_id}"
   end
 end

@@ -127,69 +127,37 @@ def get_linkedin_client
   lnk_client
 end
 
-def lnk_show_all_companies options={}
-  lnk_client = get_linkedin_client
-  begin
-    response = lnk_client.company_search(params['q'])
-    puts "RESPONSE #{response.inspect}"
-
+helpers do
+  def array_to_ul array
     output = '<ul>'
-    object_type = 'company'
-    response.companies.all.each do |record|
-      output += "<li>#{record.id}, #{record.name}, <a href='/#{object_type}/#{record.id}'>Show</a></li>"
-    end
-    output += '</ul>'
-
-  rescue OAuth2::Error => e
-      e.response.inspect
-  end
-end
-
-def lnk_show_company id, options={}
-  lnk_client = get_linkedin_client
-  begin
-    response = lnk_client.company({:id => id, :fields => ['id', 'name', 'description', 'founded-year', 'universal-name', 'locations', 'email-domains', 'company-type', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']})
-    puts "RESPONSE #{response.inspect}"
-
-    if (options[:raw] == true)
-      return response.body
-    else
-      return hashie_to_ul response
-    end
-  rescue OAuth2::Error => e
-     return e.response.inspect
-  end
-end
-
-def array_to_ul array
-  output = '<ul>'
-  array.each do |value|
-    if (value.respond_to? :keys)
-      value = hashie_to_ul value
-    elsif (value.class == Array)
-      value = array_to_ul value
-    end
-    output += "<li>#{value}</li>"
-  end
-  output += '</ul>'
-  return output
-end
-
-def hashie_to_ul hashie
-  output = '<ul>'
-  hashie.keys.each do |key|
-    value = hashie[key]
-    unless value.nil?
+    array.each do |value|
       if (value.respond_to? :keys)
         value = hashie_to_ul value
       elsif (value.class == Array)
         value = array_to_ul value
       end
-      output += "<li><strong>#{key}</strong>: #{value}</li>"
+      output += "<li>#{value}</li>"
     end
+    output += '</ul>'
+    return output
   end
-  output += '</ul>'
-  return output
+
+  def hashie_to_ul hashie
+    output = '<ul>'
+    hashie.keys.each do |key|
+      value = hashie[key]
+      unless value.nil?
+        if (value.respond_to? :keys)
+          value = hashie_to_ul value
+        elsif (value.class == Array)
+          value = array_to_ul value
+        end
+        output += "<li><strong>#{key}</strong>: #{value}</li>"
+      end
+    end
+    output += '</ul>'
+    return output
+  end
 end
 
 

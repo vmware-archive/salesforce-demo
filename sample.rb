@@ -16,6 +16,12 @@ require_relative 'Company'
 enable :sessions
 
 get '/' do
+  @cart = []
+  if (session[:recent_companies])
+    session[:recent_companies].each do |key, json|
+      @cart << JSON::parse(json)
+    end
+  end
   haml :index
 end
 

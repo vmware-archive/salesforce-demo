@@ -1,6 +1,13 @@
 %html
   %title Salesforce Demo
   %body
+    - unless @cart.count == 0
+      %div{:style => 'dsiplay:inline; float:left'}
+        %h1 Cart
+        %ul
+        - @cart.each do |company|
+          %li
+            = hashie_to_ul company
     %div{:style => 'dsiplay:inline; float:left'}
       %h1 Salesforce
       %tt

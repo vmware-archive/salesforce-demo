@@ -1,6 +1,7 @@
 get '/leads' do
   @controller = 'leads'
   @data = show_all 'lead'
+  @title = "Leads"
   haml :show_all
 end
 

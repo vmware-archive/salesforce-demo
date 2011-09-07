@@ -6,4 +6,7 @@
       %a{:href=>"/#{@controller}/create?name="} New
 .clear
 .grid_8
-  = @data
+  -unless @data.nil?
+    = @data
+  -else
+    %p No records.

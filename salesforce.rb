@@ -33,10 +33,10 @@ end
 def show_all object_type, options={}
   begin
     response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape("SELECT Name, Id from #{object_type.capitalize} LIMIT 100")}", :headers => {'Content-type' => 'application/json'})
-
+     output = nil
      if (options[:raw] == true)
       return response.body
-    else
+     elsif (response.parsed['records'].count > 0)
       output = '<ul>'
       response.parsed['records'].each do |record|
         output += "<li>#{record['Id']}, #{record['Name']}, <a href='/#{object_type}/#{record['Id']}'>Show</a>, <a href='/#{object_type}/edit/#{record['Id']}'>Edit</a>, <a href='/#{object_type}/delete/#{record['Id']}'>Delete</a></li>"
@@ -46,6 +46,7 @@ def show_all object_type, options={}
   rescue OAuth2::Error => e
       e.response.inspect
   end
+  output
 end
 
 def create object_type, json

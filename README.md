@@ -14,8 +14,10 @@ To seed data simply:
 You can try it live at https://salesforce-demo.cloudfoundry.com/
 
 # Code
-* Simple Sinatra Web App
+* Simple Sinatra Web App built using Ruby 1.9.2-p180
     * The main file is demo.rb
+    * Uses OAuth 2.0 and LinkedIn gems
+    * Styling done with 960.gs. See style.css
 * The project will be open sourced under MIT License
 
 ## About the Salesforce code

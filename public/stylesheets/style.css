@@ -28,6 +28,8 @@ body {
   width: 960px;
   min-height: 1000px;
   background: #EEE url(/images/bg_main_dark.jpg);
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 
 /* `Grid >> Global
@@ -358,4 +360,15 @@ body {
 .clearfix,
 .container_12 {
   zoom: 1;
+}
+
+/*===============================================================================================*/
+
+.white {
+    background-color: white;
+    min-height: 400px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 1px 1px 2px #ccc;
 }

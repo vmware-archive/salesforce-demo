@@ -7,7 +7,8 @@
         %ul
         - @cart.each do |company|
           %li
-            = hashie_to_ul company
+            %a{:href=> "/company/#{company['id']}"}
+              %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
     %div{:style => 'dsiplay:inline; float:left'}
       %h1 Salesforce
       %tt

@@ -41,15 +41,20 @@ Register at http://cloudfoundry.com/
 * vmc target api.cloudfoundry.com
 * vmc login
 * Enter Credentials
-* Clone this repository if you have not done so already
 
-* vmc push salesforce-demo
+Clone this repository if you have not done so already and make your modifications. Then deploy to Cloud Foundry
 
-* vmc env-add salesforce-demo salesforce_key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
-* vmc env-add salesforce-demo salesforce_secret=3746747173514820663
-* vmc env-add salesforce-demo salesforce_instance_url=https://c.na9.visual.force.com
+* vmc push salesforce-demo2
 
-* vmc bind-service redis salesforce-demo
+* vmc env-add salesforce-demo2 salesforce_key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
+* vmc env-add salesforce-demo2 salesforce_secret=3746747173514820663
+* vmc env-add salesforce-demo2 salesforce_instance_url=https://c.na9.visual.force.com   (or whatever you want to use)
+
+* vmc env-add salesforce-demo2 linkedin_key=12121218575
+* vmc env-add salesforce-demo2 linkedin_secret=erjerejrbnn293394j
+
+* vmc create-service redis
+* vmc bind-service redis salesforce-demo2
 
 Then go to your cloud foundry app to test. Remember to use SSL
 

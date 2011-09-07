@@ -5,17 +5,19 @@ require 'json'
 require 'cgi'
 require 'net/https'
 require 'oauth2'
+require 'linkedin'
+require 'redis'
+
 require_relative 'oauth2_patch'
 require_relative 'salesforce'
-require_relative 'opportunity'
-require_relative 'Account'
-require_relative 'Lead'
-require 'linkedin'
 require_relative 'linkedin_client'
-require_relative 'Company'
-require 'redis'
-enable :sessions
 
+require_relative 'lib/opportunity'
+require_relative 'lib/account'
+require_relative 'lib/lead'
+require_relative 'lib/company'
+
+enable :sessions
 
 configure do
   services = JSON.parse(ENV['VCAP_SERVICES'])
@@ -34,6 +36,7 @@ get '/' do
       @cart << JSON.parse(json)
     end
   end
+  @title = "Salesforce Demo"
   haml :index
 end
 

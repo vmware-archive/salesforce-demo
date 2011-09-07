@@ -1,11 +1,9 @@
-%html
-  %head
-    %title
-      = @company.name
-  %body
-    %ul
-      %li
-        %a{:href=> "/company/raw/#{@company.id}.json"} JSON
-        %a{:href=> "/company/add/#{@company.id}.json", :target => '_new'} Add to Cart
-    %br
-    = hashie_to_ul @company
+.grid_12
+  %ul.grid_6
+    %li.alpha
+      %a{:href=> "/company/raw/#{@company.id}.json"} JSON
+    %li.omega
+      %a{:href=> "/company/add/#{@company.id}.json"} Add to Cart
+.clear
+.grid_8
+  = hashie_to_ul @company

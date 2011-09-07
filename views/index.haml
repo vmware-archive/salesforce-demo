@@ -1,27 +1,27 @@
-%html
-  %title Salesforce Demo
-  %body
-    - unless @cart.count == 0
-      %div{:style => 'dsiplay:inline; float:left'}
-        %h1 Cart
-        %ul
-        - @cart.each do |company|
-          %li
-            %a{:href=> "/company/#{company['id']}"}
-              %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
-    %div{:style => 'dsiplay:inline; float:left'}
-      %h1 Salesforce
-      %tt
-        %ul
-          %li
-            %a{:href => '/accounts'} Accounts
-          %li
-            %a{:href => '/opportunities'} Opportunities
-          %li
-            %a{:href => '/leads'} Leads
-    %div{:style => 'dsiplay:inline; float:left'}
-      %h1 Linked In
-      %tt
-        %ul
-          %li
-            %a{:href => '/companies?q=vmware'} Companies
+.grid_10
+  %p This is a demo data generator for Salesforce.
+.clear
+.grid_4
+  %h3 Salesforce
+  %ul
+    %li
+      %a{:href => '/accounts'} Accounts
+    %li
+      %a{:href => '/opportunities'} Opportunities
+    %li
+      %a{:href => '/leads'} Leads
+.grid_4
+  %h3 Linked In
+  %ul
+    %li
+      %a{:href => '/companies?q=vmware'} Companies
+
+- unless @cart.count == 0
+  .grid_4
+    %h3 Cart
+    %ul
+    - @cart.each do |company|
+      %li
+        %a{:href=> "/company/#{company['id']}"}
+          %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
+

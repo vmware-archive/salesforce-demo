@@ -1,0 +1,12 @@
+%html
+  %head
+    %title
+      = @title
+    %link{:rel=>'stylesheet', :href=>'/stylesheets/style.css', :type => "text/css"}
+  %body
+    .container_12
+      .grid_4
+        %h1
+          = @title
+      .clear
+      = yield

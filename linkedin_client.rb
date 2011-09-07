@@ -1,6 +1,17 @@
 module LinkedIn
-  class Client
+  module Helpers
+    module Authorization
+      DEFAULT_OAUTH_OPTIONS = {
+        :request_token_path => "/uas/oauth/requestToken",
+        :access_token_path  => "/uas/oauth/accessToken",
+        :authorize_path     => "/uas/oauth/authenticate",
+        :api_host           => "https://api.linkedin.com",
+        :auth_host          => "https://www.linkedin.com"
+      }
+    end
+  end
 
+  class Client
     def parse_oauth_options
       {
         :request_token_url => full_oauth_url_for(:request_token, :api_host),

@@ -27,7 +27,7 @@ configure do
     @@redis = Redis.new redis_conf
 end
 
-get '/' do
+before do
   @cart = []
   redis_data = @@redis.smembers cart_id
   if (redis_data)
@@ -36,6 +36,9 @@ get '/' do
       @cart << JSON.parse(json)
     end
   end
+end
+
+get '/' do
   @title = "Salesforce Demo"
   haml :index
 end

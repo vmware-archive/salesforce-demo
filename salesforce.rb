@@ -65,13 +65,7 @@ def show_one object_type, id, options={}
     if (options[:raw] == true)
       return response.body
     else
-      response_parsed = response.parsed
-      output = '<ul>'
-      response_parsed.each do |key, value|
-        output += "<li>#{key}:#{value}</li>" unless value.nil?
-      end
-      output += '</ul>'
-      return output
+      return response.parsed
     end
   rescue OAuth2::Error => e
      return e.response.inspect

@@ -3,26 +3,15 @@ COMPANY_FIELDS = ['id', 'name', 'description', 'founded-year', 'universal-name',
 get '/companies' do
   @title = 'Companies'
   @controller = 'companies'
-  @data = lnk_show_all_companies
-  haml :show_all
-end
-
-def lnk_show_all_companies options={}
   lnk_client = get_linkedin_client
+  @data = nil
   begin
-    response = lnk_client.company_search(params['q'])
-    puts "RESPONSE #{response.inspect}"
-
-    output = '<ul>'
-    object_type = 'company'
-    response.companies.all.each do |record|
-      output += "<li>#{record.id}, #{record.name}, <a href='/#{object_type}/#{record.id}'>Show</a></li>"
-    end
-    output += '</ul>'
-
+    @data = lnk_client.company_search(params['q']).companies.all
+    @object_type = 'company'
   rescue OAuth2::Error => e
-      e.response.inspect
+    e.response.inspect
   end
+  haml :show_all
 end
 
 get '/company/:company_id' do |company_id|
@@ -33,7 +22,7 @@ get '/company/:company_id' do |company_id|
     @@redis.set "company_#{company_id}", @company.to_json
     @title = @company.name
   rescue OAuth2::Error => e
-     return e.response.inspect
+    return e.response.inspect
   end
   haml :company
 end
@@ -45,7 +34,7 @@ end
 get  '/company/add/:company_id.json' do |company_id|
   if @@redis.get "company_#{company_id}"
     @@redis.sadd cart_id, "company_#{company_id}"
-    redirect "/"
+    redirect "/companies"
   end
 end
 

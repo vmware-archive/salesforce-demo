@@ -9,4 +9,31 @@
         %h1
           = @title
       .clear
+      .grid_4
+        .white
+          %h3 Salesforce
+          %ul
+            %li
+              %a{:href => '/accounts'} Accounts
+            %li
+              %a{:href => '/opportunities'} Opportunities
+            %li
+              %a{:href => '/leads'} Leads
+      .grid_4
+        .white
+          %h3 Linked In
+          %ul
+            %li
+              %a{:href => '/companies?q=vmware'} Companies
+
+      - if @cart && @cart.count > 0
+        .grid_4
+          .white
+            %h3 Cart
+            %ul
+              - @cart.each do |company|
+                %li
+                  %a{:href=> "/company/#{company['id']}"}
+                    %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
+      .clear
       = yield

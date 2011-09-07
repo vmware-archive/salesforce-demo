@@ -366,7 +366,7 @@ body {
 
 .white {
     background-color: white;
-    min-height: 400px;
+    min-height: 200px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 10px;

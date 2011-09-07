@@ -11,9 +11,11 @@ get '/leads.json' do
 end
 
 get '/lead/:lead_id' do |lead_id|
-  output = "<html><body><a href='/lead/raw/#{lead_id}.json'>JSON</a><br /><tt>"
-  output += show_one 'lead', lead_id
-  output += '<tt></body></html>'
+  @object_type = 'lead'
+  @item_id = lead_id
+  @item_data = show_one 'lead', lead_id
+
+  haml :show_one
 end
 
 get '/lead/raw/:lead_id.json' do |lead_id|

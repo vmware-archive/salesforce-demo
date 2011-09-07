@@ -1,0 +1,7 @@
+.grid_12
+  %ul.grid_6
+    %li.alpha
+      %a{:href=> "/#{@object_type}/raw/#{@item_id}.json"} JSON
+.clear
+.grid_8.prefix_1
+  = hashie_to_ul @item_data

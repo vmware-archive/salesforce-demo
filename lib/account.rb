@@ -11,9 +11,11 @@ get '/accounts.json' do
 end
 
 get '/account/:account_id' do |account_id|
-  output = "<html><body><a href='/account/raw/#{account_id}.json'>JSON</a><br /><tt>"
-  output += show_one 'account', account_id
-  output += '<tt></body></html>'
+  @object_type = 'account'
+  @item_id = account_id
+  @item_data = show_one 'account', account_id
+
+  haml :show_one
 end
 
 get '/account/raw/:account_id.json' do |account_id|

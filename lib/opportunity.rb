@@ -11,9 +11,11 @@ get '/opportunities.json' do
 end
 
 get '/opportunity/:opportunity_id' do |opportunity_id|
-  output = "<html><body><a href='/opportunity/raw/#{opportunity_id}.json'>JSON</a><br /><tt>"
-  output += show_one 'opportunity', opportunity_id
-  output += '<tt></body></html>'
+  @object_type = 'opportunity'
+  @item_id = opportunity_id
+  @item_data = show_one 'opportunity', opportunity_id
+
+  haml :show_one
 end
 
 get '/opportunity/raw/:opportunity.json' do |opportunity_id|

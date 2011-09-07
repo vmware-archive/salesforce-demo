@@ -7,6 +7,12 @@
 .clear
 .grid_8
   -unless @data.nil?
-    = @data
+    - if (@object_type == 'company')
+      %ul
+      - @data.each do |record|
+        %li
+          = "#{record.id}, #{record.name}, <a href='/#{@object_type}/#{record.id}'>Show</a></li>"
+    - else
+      = @data
   -else
     %p No records.

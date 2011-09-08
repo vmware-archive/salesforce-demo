@@ -10,6 +10,7 @@ require 'redis'
 
 require_relative 'oauth2_patch'
 require_relative 'salesforce'
+require_relative 'lib/chatter'
 require_relative 'linkedin_client'
 require_relative 'lib/helpers'
 require_relative 'lib/opportunity'
@@ -25,6 +26,7 @@ configure do
     redis = services[redis_key].first['credentials']
     redis_conf = {:host => redis['hostname'], :port => redis['port'], :password => redis['password']}
     @@redis = Redis.new redis_conf
+    puts "REDIS INFO: #{@@redis.info}"
 end
 
 before do

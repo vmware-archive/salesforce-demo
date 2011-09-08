@@ -1,5 +1,6 @@
 get '/opportunities' do
   @controller = 'opportunities'
+  @object_type = 'opportunity'
   @data = show_all 'opportunity'
   @title = "Opportunities"
   haml :show_all

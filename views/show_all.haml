@@ -15,7 +15,14 @@
         .grid_2
           %a.button{:href=>"/#{@controller}/create"} New
         .clear
-        = @data
+        %ul
+          - @data.each do |record|
+            %li
+              %span
+                = record['Name']
+              %a{:href=>"/#{@object_type}/#{record['Id']}"} Show
+              %a{:href=>"/#{@object_type}/edit/#{record['Id']}"} Edit
+              %a{:href=>"/#{@object_type}/delete/#{record['Id']}"} Delete
     -else
       .grid_2
         %a.button{:href=>"/#{@controller}.json"} JSON

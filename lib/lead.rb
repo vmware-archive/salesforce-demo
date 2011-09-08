@@ -2,6 +2,7 @@ get '/leads' do
   @controller = 'leads'
   @data = show_all 'lead'
   @title = "Leads"
+  @object_type = 'lead'
   haml :show_all
 end
 

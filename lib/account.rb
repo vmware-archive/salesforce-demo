@@ -1,5 +1,6 @@
 get '/accounts' do
   @controller = 'accounts'
+  @object_type = 'account'
   @data = show_all 'account'
   @title = "Accounts"
   haml :show_all

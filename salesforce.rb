@@ -39,11 +39,7 @@ def show_all object_type, options={}
      if (options[:raw] == true)
       return response.body
      elsif (response.parsed['records'].count > 0)
-      output = '<ul>'
-      response.parsed['records'].each do |record|
-        output += "<li>#{record['Id']}, #{record['Name']}, <a href='/#{object_type}/#{record['Id']}'>Show</a>, <a href='/#{object_type}/edit/#{record['Id']}'>Edit</a>, <a href='/#{object_type}/delete/#{record['Id']}'>Delete</a></li>"
-      end
-      output += '</ul>'
+      return response.parsed['records']
      end
   rescue OAuth2::Error => e
       output = e.response.inspect
@@ -78,7 +74,6 @@ def update object_type, id, json
 
   begin
     access_token.post("#{INSTANCE_URL}/services/data/v20.0/sobjects/#{object_type.capitalize}/#{id}?_HttpMethod=PATCH", :body => json, :headers => {'Content-type' => 'application/json'})
-    'Updated record<br/><br/>'
   rescue OAuth2::Error => e
       e.response.inspect
   end
@@ -87,7 +82,6 @@ end
 def delete object_type, id
   begin
     access_token.delete("#{INSTANCE_URL}/services/data/v20.0/sobjects/#{object_type}/#{id}")
-    'Deleted record<br/><br/>'
   rescue OAuth2::Error => e
       e.response.inspect
   end

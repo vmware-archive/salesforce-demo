@@ -24,37 +24,36 @@ get '/account/raw/:account_id.json' do |account_id|
 end
 
 get '/accounts/create' do
-  output = '<html><body><tt>'
-  name = params['name'] rescue 'Acme'
-  n = params['n'].to_i rescue 1
-  n.times do |i|
-    account = {'Name' => "#{params['name']} #{i}"}
+  @title = "Account Creation"
+  @messages = []
+  @cart.each do |company|
+    account = {'Name' => "#{company['name']}"}
     id = create 'account', account.to_json
-    output += "Created account <a href='/account/#{id}.json'>Account ID=#{id}</a><br />"
+    @messages << "Created account <a href='/account/#{id}'>#{id}</a>"
   end
 
-  output += '<tt></body></html>'
+  haml :info
 end
 
 get '/account/edit/:account_id' do |account_id|
-  output = '<html><body><tt>'
+  @messages = []
    if (params.has_key? 'name' && params['name'] )
      account = {'Name' => params['name']}
-     output += update 'account', account_id, account.to_json
-     output += "Updated account <a href='/account/#{account_id}.json'>Account ID=#{account_id}</a>"
+     @messages << update('account', account_id, account.to_json)
+     @messages << "Updated account <a href='/account/#{account_id}'>#{account_id}</a>"
   end
-  output += '<tt></body></html>'
+  haml :info
 end
 
 get '/account/delete/:account_id' do |account_id|
-  output = '<html><body><tt>'
+  @messages = []
   if (account_id)
-    output += "<p>Deleting #{account_id}</p>"
-    output += delete 'account', account_id
+     @messages << "Deleting #{account_id}"
+     @messages << delete('account', account_id)
   else
-    output += request.inspect
+    @messages << request.inspect
   end
-  output += '<tt></body></html>'
+  haml :info
 end
 
 

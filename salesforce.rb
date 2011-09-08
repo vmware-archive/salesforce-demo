@@ -31,8 +31,10 @@ def client
 end
 
 def show_all object_type, options={}
+  url = "#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape("SELECT Name, Id from #{object_type.capitalize} LIMIT 100")}"
+
   begin
-    response = access_token.get("#{INSTANCE_URL}/services/data/v20.0/query/?q=#{CGI::escape("SELECT Name, Id from #{object_type.capitalize} LIMIT 100")}", :headers => {'Content-type' => 'application/json'})
+    response = access_token.get(url, :headers => {'Content-type' => 'application/json'})
      output = nil
      if (options[:raw] == true)
       return response.body
@@ -42,9 +44,9 @@ def show_all object_type, options={}
         output += "<li>#{record['Id']}, #{record['Name']}, <a href='/#{object_type}/#{record['Id']}'>Show</a>, <a href='/#{object_type}/edit/#{record['Id']}'>Edit</a>, <a href='/#{object_type}/delete/#{record['Id']}'>Delete</a></li>"
       end
       output += '</ul>'
-    end
+     end
   rescue OAuth2::Error => e
-      e.response.inspect
+      output = e.response.inspect
   end
   output
 end

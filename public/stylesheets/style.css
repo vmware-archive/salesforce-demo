@@ -366,7 +366,7 @@ body {
 
 .white {
     background-color: white;
-    min-height: 200px;
+    min-height: 300px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 10px;
@@ -377,8 +377,21 @@ body {
     margin-top: 10px;
 }
 
-h1 {
-    text-shadow: 2px 2px 2px #999;
+h1, h3 {
+    text-align: center;
+    background-color: #187AAB;
+    color: white;
+    box-shadow: 1px 1px 2px #999;
+    border-radius: 4px 4px;
+    line-height: 2.0em;
+}
+
+.button {
+    background-color: #45C72F;
+    color: white;
+    padding: 5px;
+    text-decoration: none;
+    border-radius: 4px 4px;
 }
 
 .cart li {

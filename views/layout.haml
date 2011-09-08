@@ -13,7 +13,27 @@
       .clear
       .grid_4
         .white
+          %h3 Linked In
+          %p First select some seed data and add it to your cart.
+          .clear
+          .grid_2.prefix_1
+            %a.button{:href => '/companies?q=vmware'} Get Companies &gt;
+          .clear
+      .grid_4
+        .white
+          %h3 Cart
+          - if @cart && @cart.count > 0
+            %ul.cart
+              - @cart.each do |company|
+                %li
+                  %a{:href=> "/company/#{company['id']}"}
+                    %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
+          - else
+            %p Cart is empty.
+      .grid_4
+        .white
           %h3 Salesforce
+          %p Finally select an object type to generate data for:
           %ul
             %li
               %a{:href => '/accounts'} Accounts
@@ -21,21 +41,9 @@
               %a{:href => '/opportunities'} Opportunities
             %li
               %a{:href => '/leads'} Leads
-      .grid_4
-        .white
-          %h3 Linked In
-          %ul
-            %li
-              %a{:href => '/companies?q=vmware'} Companies
-
-      - if @cart && @cart.count > 0
-        .grid_4
-          .white
-            %h3 Cart
-            %ul.cart
-              - @cart.each do |company|
-                %li
-                  %a{:href=> "/company/#{company['id']}"}
-                    %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
+          %p
+            %span Source:
+            %a{:href=> "#{INSTANCE_URL}/home/home.jsp", :target => "blank"}
+              =INSTANCE_URL
       .clear
       = yield

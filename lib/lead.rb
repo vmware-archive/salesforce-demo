@@ -6,7 +6,9 @@ get '/leads' do
 end
 
 get '/leads.json' do
+  puts "*** monica"
   response = show_all 'lead', {:raw => true}
+  puts "*** response = #{response}"
   response
 end
 

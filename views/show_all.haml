@@ -1,16 +1,25 @@
 .grid_8.prefix_2
   .white.data
     -unless @data.nil?
+      %h3 Results
       - if (@object_type == 'company')
+        %p Drill into each record to see if you want to add it to cart.
         %ul
         - @data.each do |record|
           %li
             %a{:href => "/#{@object_type}/#{record.id}"}
               = "#{record.name}"
       - else
-        %a.grid_4{:href=>"/#{@controller}.json"} JSON
-        %a.grid_4{:href=>"/#{@controller}/create?name="} New
+        .grid_2
+          %a.button{:href=>"/#{@controller}.json"} JSON
+        .grid_2
+          %a.button{:href=>"/#{@controller}/create"} New
         .clear
         = @data
     -else
+      .grid_2
+        %a.button{:href=>"/#{@controller}.json"} JSON
+      .grid_2
+        %a.button{:href=>"/#{@controller}/create"} New
+      .clear
       %p No records.

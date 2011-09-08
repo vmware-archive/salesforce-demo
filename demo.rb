@@ -28,6 +28,7 @@ configure do
 end
 
 before do
+  @title = "Salesforce Demo"
   @cart = []
   redis_data = @@redis.smembers cart_id
   if (redis_data)
@@ -39,7 +40,6 @@ before do
 end
 
 get '/' do
-  @title = "Salesforce Demo"
   haml :index
 end
 

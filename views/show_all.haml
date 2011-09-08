@@ -12,8 +12,9 @@
       - else
         .grid_2
           %a.button{:href=>"/#{@controller}.json"} JSON
-        .grid_2
-          %a.button{:href=>"/#{@controller}/create"} New
+        -if @cart.count > 0
+          .grid_2
+            %a.button{:href=>"/#{@controller}/create"} Generate
         .clear
         %ul
           - @data.each do |record|
@@ -26,7 +27,8 @@
     -else
       .grid_2
         %a.button{:href=>"/#{@controller}.json"} JSON
-      .grid_2
-        %a.button{:href=>"/#{@controller}/create"} New
+        -if @cart.count > 0
+          .grid_2
+            %a.button{:href=>"/#{@controller}/create"} Generate
       .clear
       %p No records.

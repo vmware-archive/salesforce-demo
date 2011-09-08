@@ -40,7 +40,7 @@ get '/account/edit/:account_id' do |account_id|
   @messages = []
    if (params.has_key? 'name' && params['name'] )
      account = {'Name' => params['name']}
-     @messages << update('account', account_id, account.to_json)
+     update('account', account_id, account.to_json)
      @messages << "Updated account <a href='/account/#{account_id}'>#{account_id}</a>"
   end
   haml :info
@@ -49,8 +49,8 @@ end
 get '/account/delete/:account_id' do |account_id|
   @messages = []
   if (account_id)
-     @messages << "Deleting #{account_id}"
-     @messages << delete('account', account_id)
+    delete('account', account_id)
+    @messages << "Deleted #{account_id}"
   else
     @messages << request.inspect
   end

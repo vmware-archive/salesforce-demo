@@ -11,7 +11,7 @@ require 'redis'
 require_relative 'oauth2_patch'
 require_relative 'salesforce'
 require_relative 'linkedin_client'
-
+require_relative 'lib/helpers'
 require_relative 'lib/opportunity'
 require_relative 'lib/account'
 require_relative 'lib/lead'

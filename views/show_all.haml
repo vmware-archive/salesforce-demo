@@ -10,10 +10,9 @@
               %a{:href => "/#{@object_type}/#{record.id}"}
                 = "#{record.name}"
       - else
-        .grid_2
+        %p
           %a.button{:href=>"/#{@controller}.json"} JSON
-        -if @cart.count > 0
-          .grid_2
+          -if @cart.count > 0
             %a.button{:href=>"/#{@controller}/create"} Generate
         .clear
         %ul
@@ -22,10 +21,9 @@
               %a{:href=>"/#{@object_type}/#{record['Id']}"}
                 = record['Name']
     -else
-      .grid_2
+      %p
         %a.button{:href=>"/#{@controller}.json"} JSON
         -if @cart.count > 0
-          .grid_2
-            %a.button{:href=>"/#{@controller}/create"} Generate
+          %a.button{:href=>"/#{@controller}/create"} Generate
       .clear
       %p No records.

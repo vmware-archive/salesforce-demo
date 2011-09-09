@@ -21,7 +21,9 @@ get '/company/:company_id' do |company_id|
     @company = lnk_client.company({:id => company_id, :fields => COMPANY_FIELDS})
     @@redis.set "company_#{company_id}", @company.to_json
     @company.delete 'email-domains'
-    @company['twitter_id'] = "http://twitter.com/" + @company['twitter_id']
+    if (@company['twitter_id'] && @company['twitter_id'] =~ /^[a-zA-Z_]+$/)
+      @company['twitter_id'] = "http://twitter.com/" + @company['twitter_id']
+    end
     @record_title = @company['name']
   rescue OAuth2::Error => e
     return e.response.inspect

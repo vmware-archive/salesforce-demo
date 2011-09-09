@@ -406,6 +406,9 @@ h1, h3 {
     border-radius: 4px 4px;
     font-size: 9pt;
 }
+.red {
+  background-color:#A90000;
+}
 
 .cart li {
    list-style-type: none;
@@ -417,7 +420,7 @@ h1, h3 {
 }
 
 h1.title {
-  color: #187AAB;
+  color: #555;
   background-color: transparent;
   border-radius: 0px;
   margin:  0px;

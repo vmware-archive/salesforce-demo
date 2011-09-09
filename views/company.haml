@@ -1,8 +1,7 @@
 .grid_12.white
   %h3
     = @record_title
-  .grid_2.prefix_10
+  %p
     %a.button{:href=> "/company/add/#{@company.id}.json"} Add to Cart
-  .clear
-  %br
   = hashie_to_grid @company
+  %p &nbsp;

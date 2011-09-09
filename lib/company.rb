@@ -1,11 +1,19 @@
 COMPANY_FIELDS = ['id', 'name', 'description', 'industry', 'blog-rss-url', 'founded-year', 'universal-name', 'locations', 'email-domains', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']
 
+post '/cart/empty' do
+ @@redis.del cart_id
+
+ redirect '/'
+end
+
+
 get '/companies' do
   @record_title = 'Companies'
   @controller = 'companies'
   lnk_client = get_linkedin_client
   @data = nil
-  @search_term = params['q'] || 'vmware'
+  @@redis.set(search_id, params['q']) if params['q']
+  @search_term = @@redis.get(search_id)
   begin
     @data = lnk_client.company_search(@search_term).companies.all
     @object_type = 'company'
@@ -39,7 +47,7 @@ end
 get  '/company/add/:company_id.json' do |company_id|
   if @@redis.get "company_#{company_id}"
     @@redis.sadd cart_id, "company_#{company_id}"
-    redirect "/companies"
+    redirect "/companies?q=#{@search_term}"
   end
 end
 

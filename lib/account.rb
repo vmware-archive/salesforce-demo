@@ -28,8 +28,12 @@ get '/accounts/create' do
   @title = "Account Creation"
   @messages = []
   @cart.each do |company|
-    contact_info = company['locations']['all'][0]['contact_info']
-    address = company['locations']['all'][0]['address']
+  contact_info = {}
+  address = {}
+    if (company['locations']['all'].count > 0)
+      contact_info = company['locations']['all'][0]['contact_info']
+      address = company['locations']['all'][0]['address']
+    end
     # Mapping LinkedIn Companies to Salesforce Accounts
     account = {
         'Name' => "#{company['name']}",

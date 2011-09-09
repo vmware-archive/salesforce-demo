@@ -1,4 +1,4 @@
-get '/chatter/me' do
+get '/chatter_user/me' do
   @object_type = 'chatter_user'
   @item_id = 'me'
   @item_data = nil
@@ -13,4 +13,9 @@ get '/chatter/me' do
   end
 
   haml :show_one
+end
+
+get '/chatter_user/raw/me.json' do
+  response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/chatter/users/me", :headers => {'Content-type' => 'application/json'})
+  response.body
 end

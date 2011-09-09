@@ -2,7 +2,8 @@
   %h3
     =@record_title
   %p
-    %a.button.red{:href=>"/#{@object_type}/delete/#{@item_id}"} Delete
+    - unless (@object_type == 'chatter_user')
+      %a.button.red{:href=>"/#{@object_type}/delete/#{@item_id}"} Delete
     %a.button{:href=> "/#{@object_type}/raw/#{@item_id}.json"} JSON
   = hashie_to_grid @item_data
   .clear

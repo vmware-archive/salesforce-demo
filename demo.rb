@@ -26,7 +26,8 @@ configure do
     redis = services[redis_key].first['credentials']
     redis_conf = {:host => redis['hostname'], :port => redis['port'], :password => redis['password']}
     @@redis = Redis.new redis_conf
-    puts "REDIS INFO: #{@@redis.info}"
+    @@redis.flushdb
+    #puts "REDIS INFO: #{@@redis.info}"
 end
 
 before do
@@ -39,6 +40,7 @@ before do
       @cart << JSON.parse(json)
     end
   end
+  @search_term = @@redis.get search_id
 end
 
 get '/' do
@@ -52,5 +54,9 @@ end
 
 def cart_id
  return "session_#{request.session_options[:id]}_cart"
+end
+
+def search_id
+ return "session_#{request.session_options[:id]}_search"
 end
 

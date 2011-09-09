@@ -32,6 +32,8 @@ get '/accounts/create' do
     # Mapping LinkedIn Companies to Salesforce Accounts
     account = {
         'Name' => "#{company['name']}",
+        'Description' => "#{company['description']}",
+        'TickerSymbol' => "#{company['ticker']}",
         'NumberOfEmployees' => company['employee_count_range']['name'].to_i,
         'Website' => company['website_url'],
         'BillingStreet' => address['street1'],

@@ -418,6 +418,9 @@ h1, h3 {
     width: 100%;
     height: 100px;
 }
+.center {
+    text-align: center;
+}
 
 h1.title {
   color: #555;

@@ -1,0 +1,10 @@
+.grid_4
+  .white.top_boxes
+    %h3 Linked In
+    %p First select some seed data and add it to your cart.
+    .clear
+    %form.center{:action => "/companies"}
+      %input{:type => 'text', :value => @search_term, :name => 'q'}
+      %br
+      %input.button{:type => 'submit', :value => 'Get Companies'}
+    .clear

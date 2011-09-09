@@ -1,0 +1,17 @@
+.grid_4
+  .white.top_boxes
+    %h3 Salesforce
+    %p Finally select an object type to generate data for:
+    %ul
+      %li
+        %a{:href => '/accounts'} Accounts
+      %li
+        %a{:href => '/opportunities'} Opportunities
+      %li
+        %a{:href => '/leads'} Leads
+    %p
+      %span Source:
+      %a{:href=> "#{INSTANCE_URL}/home/home.jsp", :target => "blank"}
+        =INSTANCE_URL
+    %p
+      %a{:href=> "/chatter/me"} My Account

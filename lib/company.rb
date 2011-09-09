@@ -5,8 +5,9 @@ get '/companies' do
   @controller = 'companies'
   lnk_client = get_linkedin_client
   @data = nil
+  @search_term = params['q'] || 'vmware'
   begin
-    @data = lnk_client.company_search(params['q']).companies.all
+    @data = lnk_client.company_search(@search_term).companies.all
     @object_type = 'company'
   rescue OAuth2::Error => e
     e.response.inspect

@@ -1,0 +1,11 @@
+.grid_4
+  .white.top_boxes
+    %h3 Cart
+    - if @cart && @cart.count > 0
+      %ul.cart
+        - @cart.each do |company|
+          %li
+            %a{:href=> "/company/#{company['id']}"}
+              %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
+    - else
+      %p Cart is empty.

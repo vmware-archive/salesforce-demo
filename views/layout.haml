@@ -10,41 +10,8 @@
     %a{:href=>"http://github.com/ciberch/salesforce-demo"}
       %img{:style=>"position: absolute; top: 0; right: 0; border: 0;",  :src=>"https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67", :alt=>"Fork me on GitHub"}
     .container_12
-      .grid_4
-        .white.top_boxes
-          %h3 Linked In
-          %p First select some seed data and add it to your cart.
-          .clear
-          .grid_2.prefix_1
-            %a.button{:href => '/companies?q=vmware'} Get Companies &gt;
-          .clear
-      .grid_4
-        .white.top_boxes
-          %h3 Cart
-          - if @cart && @cart.count > 0
-            %ul.cart
-              - @cart.each do |company|
-                %li
-                  %a{:href=> "/company/#{company['id']}"}
-                    %img{:src=> "#{company['logo_url']}", :title => "#{company['name']}"}
-          - else
-            %p Cart is empty.
-      .grid_4
-        .white.top_boxes
-          %h3 Salesforce
-          %p Finally select an object type to generate data for:
-          %ul
-            %li
-              %a{:href => '/accounts'} Accounts
-            %li
-              %a{:href => '/opportunities'} Opportunities
-            %li
-              %a{:href => '/leads'} Leads
-          %p
-            %span Source:
-            %a{:href=> "#{INSTANCE_URL}/home/home.jsp", :target => "blank"}
-              =INSTANCE_URL
-          %p
-            %a{:href=> "/chatter/me"} My Account
+      = haml :linkedin_home, :layout => false
+      = haml :cart, :layout => false
+      = haml :salesforce_home, :layout => false
       .clear
       = yield

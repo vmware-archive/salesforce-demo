@@ -1,15 +1,13 @@
 get '/leads' do
   @controller = 'leads'
   @data = show_all 'lead'
-  @title = "Leads"
+  @record_title = "Leads"
   @object_type = 'lead'
   haml :show_all
 end
 
 get '/leads.json' do
-  puts "*** monica"
   response = show_all 'lead', {:raw => true}
-  puts "*** response = #{response}"
   response
 end
 
@@ -17,7 +15,7 @@ get '/lead/:lead_id' do |lead_id|
   @object_type = 'lead'
   @item_id = lead_id
   @item_data = show_one 'lead', lead_id
-
+  @record_title = @item_data['Name']
   haml :show_one
 end
 
@@ -27,37 +25,27 @@ get '/lead/raw/:lead_id.json' do |lead_id|
 end
 
 get '/leads/create' do
-  output = '<html><body><tt>'
-  name = params['name'] rescue 'Parker'
-  n = params['n'].to_i rescue 1
-  n.times do |i|
-    lead = {'LastName' => "#{params['name']}", 'Company' =>  "ABC #{i}"}
-    id = create 'lead', lead.to_json
-    output += "Created lead <a href='/lead/#{id}.json'>Lead ID=#{id}</a><br />"
+  @title = "Lead Creation"
+  @messages = []
+  @cart.each do |company|
+    lead = {'FirstName' => "Trevor", 'LastName' => "Yang", 'Company' => "#{company['name']}"}
+    id = create 'account', lead.to_json
+    @messages << "Created lead <a href='/lead/#{id}'>#{id}</a>"
   end
 
-  output += '<tt></body></html>'
+  haml :info
 end
 
-get '/lead/edit/:lead_id' do |lead_id|
-  output = '<html><body><tt>'
-   if (params.has_key? 'name' && params['name'] )
-     lead = {'LastName' => params['name']}
-     output += update 'lead', lead_id, lead.to_json
-     output += "Updated lead <a href='/lead/#{lead_id}.json'>Lead ID=#{lead_id}</a>"
-  end
-  output += '<tt></body></html>'
-end
 
 get '/lead/delete/:lead_id' do |lead_id|
-  output = '<html><body><tt>'
+  @messages = []
   if (lead_id)
-    output += "<p>Deleting #{lead_id}</p>"
-    output += delete 'lead', lead_id
+    delete('lead', lead_id)
+    @messages << "Deleted #{lead_id}"
   else
-    output += request.inspect
+    @messages << request.inspect
   end
-  output += '<tt></body></html>'
+  haml :info
 end
 
 

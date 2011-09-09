@@ -2,7 +2,7 @@ get '/accounts' do
   @controller = 'accounts'
   @object_type = 'account'
   @data = show_all 'account'
-  @title = "Accounts"
+  @record_title = "Accounts"
   haml :show_all
 end
 

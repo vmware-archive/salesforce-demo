@@ -2,7 +2,7 @@ get '/opportunities' do
   @controller = 'opportunities'
   @object_type = 'opportunity'
   @data = show_all 'opportunity'
-  @title = "Opportunities"
+  @record_title = "Opportunities"
   haml :show_all
 end
 
@@ -15,7 +15,7 @@ get '/opportunity/:opportunity_id' do |opportunity_id|
   @object_type = 'opportunity'
   @item_id = opportunity_id
   @item_data = show_one 'opportunity', opportunity_id
-
+  @record_title = @item_data['Name']
   haml :show_one
 end
 
@@ -36,7 +36,11 @@ get '/opportunities/create' do
     n = 1
     n = params['n'].to_i if params['n']
     n.times do |i|
-      opp = {'Name' => "#{i*100} #{name} Enterprise Licenses", 'CloseDate' => "2012-#{(i % 12).to_s}-15", 'StageName' => 'Negotiation/Review'}
+      opp = {
+          'Name' => "#{i*100} #{name} Enterprise Licenses",
+          'CloseDate' => "2012-#{(i % 12).to_s}-15",
+          'StageName' => 'Negotiation/Review'
+      }
       id = create 'opportunity', opp.to_json
       output += "Created opportunity <a href='/opportunity/#{id}.json'>Opportunity ID=#{id}</a><br />"
     end
@@ -44,26 +48,16 @@ get '/opportunities/create' do
   output += '<tt></body></html>'
 end
 
-get '/opportunity/edit/:opportunity_id' do |opportunity_id|
-  output = '<html><body><tt>'
-   if (params.has_key? 'name' && params['name'] )
-     opp = {'Name' => params['name']}
-     output += update 'opportunity', opportunity_id, opp.to_json
-     output += "Updated opportunity <a href='/opportunity/#{opportunity_id}.json'>Opportunity ID=#{opportunity_id}</a>"
-  end
-  output += '<tt></body></html>'
-end
 
 get '/opportunity/delete/:opportunity_id' do |opportunity_id|
-  output = '<html><body><tt>'
+  @messages = []
   if (opportunity_id)
-    output += "<p>Deleting #{opportunity_id}</p>"
-    output += delete 'opportunity', opportunity_id
-    redirect '/opportunities'
+    delete('opportunity', opportunity_id)
+    @messages << "Deleted #{opportunity_id}"
   else
-    output += request.inspect
+    @messages << request.inspect
   end
-  output += '<tt></body></html>'
+  haml :info
 end
 
 

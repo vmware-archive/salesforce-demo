@@ -1,7 +1,7 @@
-COMPANY_FIELDS = ['id', 'name', 'description', 'founded-year', 'universal-name', 'locations', 'email-domains', 'company-type', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']
+COMPANY_FIELDS = ['id', 'name', 'description', 'founded-year', 'universal-name', 'locations', 'email-domains', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']
 
 get '/companies' do
-  @title = 'Companies'
+  @record_title = 'Companies'
   @controller = 'companies'
   lnk_client = get_linkedin_client
   @data = nil
@@ -20,7 +20,9 @@ get '/company/:company_id' do |company_id|
   begin
     @company = lnk_client.company({:id => company_id, :fields => COMPANY_FIELDS})
     @@redis.set "company_#{company_id}", @company.to_json
-    @title = @company.name
+    @company.delete 'email-domains'
+    @company['twitter_id'] = "http://twitter.com/" + @company['twitter_id']
+    @record_title = @company['name']
   rescue OAuth2::Error => e
     return e.response.inspect
   end

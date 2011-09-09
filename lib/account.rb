@@ -15,7 +15,7 @@ get '/account/:account_id' do |account_id|
   @object_type = 'account'
   @item_id = account_id
   @item_data = show_one 'account', account_id
-
+  @record_title = @item_data['Name']
   haml :show_one
 end
 
@@ -33,16 +33,6 @@ get '/accounts/create' do
     @messages << "Created account <a href='/account/#{id}'>#{id}</a>"
   end
 
-  haml :info
-end
-
-get '/account/edit/:account_id' do |account_id|
-  @messages = []
-   if (params.has_key? 'name' && params['name'] )
-     account = {'Name' => params['name']}
-     update('account', account_id, account.to_json)
-     @messages << "Updated account <a href='/account/#{account_id}'>#{account_id}</a>"
-  end
   haml :info
 end
 

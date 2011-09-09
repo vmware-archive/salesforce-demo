@@ -28,7 +28,17 @@ get '/accounts/create' do
   @title = "Account Creation"
   @messages = []
   @cart.each do |company|
-    account = {'Name' => "#{company['name']}"}
+    address = company['locations']['all'][0]['address']
+    # Mapping LinkedIn Companies to Salesforce Accounts
+    account = {
+        'Name' => "#{company['name']}",
+        'NumberOfEmployees' => company['employee_count_range']['name'].to_i,
+        'Website' => company['website_url'],
+        'BillingStreet' => address['street1'],
+        'BillingCity' => address['city'],
+        'BillingState' => address['region'],
+        'BillingPostalCode' => address['postal_code']
+    }
     id = create 'account', account.to_json
     @messages << "Created account <a href='/account/#{id}'>#{id}</a>"
   end

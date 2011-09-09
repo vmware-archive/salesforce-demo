@@ -1,4 +1,4 @@
-COMPANY_FIELDS = ['id', 'name', 'description', 'founded-year', 'universal-name', 'locations', 'email-domains', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']
+COMPANY_FIELDS = ['id', 'name', 'description', 'industry', 'blog-rss-url', 'founded-year', 'universal-name', 'locations', 'email-domains', 'website-url', 'ticker', 'logo-url', 'twitter-id', 'employee-count_range']
 
 get '/companies' do
   @record_title = 'Companies'

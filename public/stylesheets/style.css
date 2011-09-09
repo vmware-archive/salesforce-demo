@@ -15,8 +15,8 @@
 
 body {
   min-width: 960px;
-  background: #585858 url(/images/bg_header.jpg);
-  font-family: "franklin-gothic-urw-1", "franklin-gothic-urw-2", helvetica, arial, sans-serif;
+  background: #EEE url(/images/bg_main_dark.jpg);
+  font-family: 'Helvetica Neue', "Helvetica Neue Light", Helvetica;
 }
 
 /* `Container
@@ -27,7 +27,6 @@ body {
   margin-right: auto;
   width: 960px;
   min-height: 1000px;
-  background: #EEE url(/images/bg_main_dark.jpg);
   -moz-border-radius: 10px;
   border-radius: 10px;
 }
@@ -364,36 +363,66 @@ body {
 
 /*===============================================================================================*/
 
-.white {
-    background-color: white;
+.top_boxes {
     min-height: 300px;
+
+}
+.white {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    box-shadow: 1px 1px 2px #999;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    padding: 10px;
-    box-shadow: 1px 1px 2px #999;
+    border: solid 1px #999;
 }
 
-.data {
-    margin-top: 10px;
+.white p {
+ text-align: center;
+}
+ul, p, li, span {
+    font-size: 9pt;
 }
 
 h1, h3 {
     text-align: center;
     background-color: #187AAB;
     color: white;
-    box-shadow: 1px 1px 2px #999;
-    border-radius: 4px 4px;
-    line-height: 2.0em;
+    /*box-shadow: 1px 1px 2px #999;*/
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    line-height: 2em;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: solid 1px #187AAB;
 }
 
 .button {
     background-color: #45C72F;
     color: white;
     padding: 5px;
+    margin-bottom: 10px;
     text-decoration: none;
     border-radius: 4px 4px;
+    font-size: 9pt;
 }
 
 .cart li {
    list-style-type: none;
+}
+
+.title_div {
+    width: 100%;
+    height: 100px;
+}
+
+h1.title {
+  color: #187AAB;
+  background-color: transparent;
+  border-radius: 0px;
+  margin:  0px;
+  padding:  0px;
+  box-shadow: none;
+  border:none;
+
 }

@@ -1,8 +1,9 @@
-.grid_2.prefix_11
-  %a.button{:href=> "/#{@object_type}/raw/#{@item_id}.json"} JSON
-.clear
-.grid_12
-  .white.data
-    %h3=@item_data['Name']
-    = hashie_to_ul @item_data
-
+.grid_12.white.data
+  %h3
+    =@record_title
+  %p
+    %a.button{:href=>"/#{@object_type}/delete/#{@item_id}"} Delete
+    %a.button{:href=> "/#{@object_type}/raw/#{@item_id}.json"} JSON
+  = hashie_to_grid @item_data
+  .clear
+  %p &nbsp;

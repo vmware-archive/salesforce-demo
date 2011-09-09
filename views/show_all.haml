@@ -1,14 +1,14 @@
-.grid_8.prefix_2
-  .white.data
+.grid_12
+  .white
     -unless @data.nil?
-      %h3 Results
+      %h3=@record_title
       - if (@object_type == 'company')
         %p Drill into each record to see if you want to add it to cart.
         %ul
-        - @data.each do |record|
-          %li
-            %a{:href => "/#{@object_type}/#{record.id}"}
-              = "#{record.name}"
+          - @data.each do |record|
+            %li
+              %a{:href => "/#{@object_type}/#{record.id}"}
+                = "#{record.name}"
       - else
         .grid_2
           %a.button{:href=>"/#{@controller}.json"} JSON
@@ -19,11 +19,8 @@
         %ul
           - @data.each do |record|
             %li
-              %span
+              %a{:href=>"/#{@object_type}/#{record['Id']}"}
                 = record['Name']
-              %a{:href=>"/#{@object_type}/#{record['Id']}"} Show
-              %a{:href=>"/#{@object_type}/edit/#{record['Id']}"} Edit
-              %a{:href=>"/#{@object_type}/delete/#{record['Id']}"} Delete
     -else
       .grid_2
         %a.button{:href=>"/#{@controller}.json"} JSON

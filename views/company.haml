@@ -1,6 +1,8 @@
-.grid_2.prefix_10
-  %a.button{:href=> "/company/add/#{@company.id}.json"} Add to Cart
-.clear
-.grid_12
-  .white.data
-    = hashie_to_ul @company
+.grid_12.white
+  %h3
+    = @record_title
+  .grid_2.prefix_10
+    %a.button{:href=> "/company/add/#{@company.id}.json"} Add to Cart
+  .clear
+  %br
+  = hashie_to_grid @company

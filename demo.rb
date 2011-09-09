@@ -30,7 +30,7 @@ configure do
 end
 
 before do
-  @title = "Salesforce Demo"
+  @title = "Salesforce Demo Builder"
   @cart = []
   redis_data = @@redis.smembers cart_id
   if (redis_data)

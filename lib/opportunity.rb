@@ -31,20 +31,26 @@ end
 
 get '/opportunities/create' do
   @messages = []
-  if (params.has_key? 'name' && params['name'] )
-    name = params['name']
-    n = 1
-    n = params['n'].to_i if params['n']
-    n.times do |i|
-      opp = {
-          'Name' => "#{i*100} #{name} Enterprise Licenses",
-          'CloseDate' => "2012-#{(i % 12).to_s}-15",
-          'StageName' => 'Negotiation/Review'
-      }
-      id = create 'opportunity', opp.to_json
-      @messages << "Created opportunity <a href='/opportunity/#{id}.json'>#{id}</a>"
+  i = 0
+  @cart.each do |company|
+    contact_info = {}
+    address = {}
+    if (company['locations']['all'].count > 0)
+      contact_info = company['locations']['all'][0]['contact_info']
+      address = company['locations']['all'][0]['address']
     end
+    # Mapping LinkedIn Companies to Salesforce Opps
+    opp = {
+        'Name' => "#{company['name']} Enterprise Licenses",
+        'Description' => "#{company['description']}",
+        'CloseDate' => "2012-#{(i % 12).to_s}-15",
+        'StageName' => 'Negotiation/Review'
+    }
+    id = create 'opportunity', opp.to_json
+    @messages << "Created opportunity <a href='/opportunity/#{id}.json'>#{id}</a>"
+    i += 1
   end
+
   haml :info
 end
 

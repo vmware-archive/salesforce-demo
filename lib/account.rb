@@ -28,29 +28,29 @@ get '/accounts/create' do
   @title = "Account Creation"
   @messages = []
   @cart.each do |company|
-  contact_info = {}
-  address = {}
-    if (company['locations']['all'].count > 0)
-      contact_info = company['locations']['all'][0]['contact_info']
-      address = company['locations']['all'][0]['address']
-    end
-    # Mapping LinkedIn Companies to Salesforce Accounts
-    account = {
-        'Name' => "#{company['name']}",
-        'Description' => "#{company['description']}",
-        'TickerSymbol' => "#{company['ticker']}",
-        'NumberOfEmployees' => company['employee_count_range']['name'].to_i,
-        'Website' => company['website_url'],
-        'Phone' => contact_info['phone1'],
-        'Industry' => company['industry'],
-        'Fax' => contact_info['fax'],
-        'BillingStreet' => address['street1'],
-        'BillingCity' => address['city'],
-        'BillingState' => address['region'],
-        'BillingPostalCode' => address['postal_code']
-    }
-    id = create 'account', account.to_json
-    @messages << "Created account <a href='/account/#{id}'>#{id}</a>"
+    contact_info = {}
+    address = {}
+      if (company['locations']['all'].count > 0)
+        contact_info = company['locations']['all'][0]['contact_info']
+        address = company['locations']['all'][0]['address']
+      end
+      # Mapping LinkedIn Companies to Salesforce Accounts
+      account = {
+          'Name' => "#{company['name']}",
+          'Description' => "#{company['description']}",
+          'TickerSymbol' => "#{company['ticker']}",
+          'NumberOfEmployees' => company['employee_count_range']['name'].to_i,
+          'Website' => company['website_url'],
+          'Phone' => contact_info['phone1'],
+          'Industry' => company['industry'],
+          'Fax' => contact_info['fax'],
+          'BillingStreet' => address['street1'],
+          'BillingCity' => address['city'],
+          'BillingState' => address['region'],
+          'BillingPostalCode' => address['postal_code']
+      }
+      id = create 'account', account.to_json
+      @messages << "Created account <a href='/account/#{id}'>#{id}</a>"
   end
 
   haml :info

@@ -30,7 +30,7 @@ get '/opportunity/raw/:opportunity_id.json' do |opportunity_id|
 end
 
 get '/opportunities/create' do
-  output = '<html><body><tt>'
+  @messages = []
   if (params.has_key? 'name' && params['name'] )
     name = params['name']
     n = 1
@@ -42,12 +42,21 @@ get '/opportunities/create' do
           'StageName' => 'Negotiation/Review'
       }
       id = create 'opportunity', opp.to_json
-      output += "Created opportunity <a href='/opportunity/#{id}.json'>Opportunity ID=#{id}</a><br />"
+      @messages << "Created opportunity <a href='/opportunity/#{id}.json'>#{id}</a>"
     end
   end
-  output += '<tt></body></html>'
+  haml :info
 end
 
+post '/opportunities/delete' do
+  @messages = []
+  @data = show_all 'opportunity'
+  @data.each do |opp|
+    delete('opportunity', opp['Id'])
+    @messages << "Deleted #{opp['Id']}"
+  end
+  haml :info
+end
 
 get '/opportunity/delete/:opportunity_id' do |opportunity_id|
   @messages = []

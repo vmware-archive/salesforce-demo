@@ -10,10 +10,11 @@
               %a{:href => "/#{@object_type}/#{record.id}"}
                 = "#{record.name}"
       - else
-        %p
+        %form.center{:action => "/#{@controller}/delete", :method => 'post'}
           %a.button{:href=>"/#{@controller}.json"} JSON
+          %input.button.red{:type=>'submit', :value=> 'Delete All'}
           -if @cart.count > 0
-            %a.button{:href=>"/#{@controller}/create"} Generate
+            %a.button{:href=>"/#{@controller}/create"} Generate from cart
         .clear
         %ul
           - @data.each do |record|
@@ -21,9 +22,10 @@
               %a{:href=>"/#{@object_type}/#{record['Id']}"}
                 = record['Name']
     -else
-      %p
+      %form.center{:action => "/#{@controller}/delete", :method => 'post'}
         %a.button{:href=>"/#{@controller}.json"} JSON
+        %input.button.red{:type=>'submit', :value=> 'Delete All'}
         -if @cart.count > 0
-          %a.button{:href=>"/#{@controller}/create"} Generate
+          %a.button{:href=>"/#{@controller}/create"} Generate from cart
       .clear
       %p No records.

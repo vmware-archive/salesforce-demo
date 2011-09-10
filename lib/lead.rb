@@ -36,6 +36,15 @@ get '/leads/create' do
   haml :info
 end
 
+post '/leads/delete' do
+  @messages = []
+  @data = show_all 'lead'
+  @data.each do |lead|
+    delete('lead', lead['Id'])
+    @messages << "Deleted #{lead['Id']}"
+  end
+  haml :info
+end
 
 get '/lead/delete/:lead_id' do |lead_id|
   @messages = []

@@ -56,6 +56,16 @@ get '/accounts/create' do
   haml :info
 end
 
+post '/accounts/delete' do
+  @messages = []
+  @data = show_all 'account'
+  @data.each do |account|
+    delete('account', account['Id'])
+    @messages << "Deleted #{account['Id']}"
+  end
+  haml :info
+end
+
 get '/account/delete/:account_id' do |account_id|
   @messages = []
   if (account_id)

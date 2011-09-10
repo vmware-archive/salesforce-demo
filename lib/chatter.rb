@@ -6,6 +6,7 @@ get '/chatter_user/me' do
   begin
     response = access_token.get("#{INSTANCE_URL}/services/data/v22.0/chatter/users/me", :headers => {'Content-type' => 'application/json'})
     @item_data = response.parsed
+    @item_data.delete 'currentStatus'
     @record_title = @item_data['name']
 
   rescue OAuth2::Error => e

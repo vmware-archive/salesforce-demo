@@ -1,0 +1,17 @@
+.grid_12.white
+  %h3 Salesforce Connection
+  -if @message
+    %p=@message
+  %form{:action => '/salesforce/instance', :method => 'post'}
+    .grid_4
+    .grid_4
+      %span Access Token:
+      %input{:readonly => 'true', :type =>'text', :name => 'access_token', :value => @access_token}
+    .grid_4
+      %span https://
+      %input{:type => 'text', :name =>'url', :value => @my_url}
+      %span .salesforce.com
+    .clear
+    .grid_12
+      %p
+        %input.button{:type => 'submit'}

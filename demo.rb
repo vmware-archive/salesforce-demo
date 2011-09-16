@@ -52,6 +52,21 @@ get '/oauth/callback' do
   redirect session['url'] || '/'
 end
 
+get '/salesforce/instance' do
+  @access_token = session['salesforce_access_token']
+  @my_url = instance
+  haml :salesforce_instance
+end
+
+post '/salesforce/instance' do
+  session.delete 'salesforce_access_token'
+  session['salesforce_instance_url'] = params[:url]
+  @access_token = ''
+  @my_url = instance
+  @message = "Saved"
+  haml :salesforce_instance
+end
+
 def cart_id
  return "session_#{request.session_options[:id]}_cart"
 end

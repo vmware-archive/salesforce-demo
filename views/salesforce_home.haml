@@ -11,7 +11,9 @@
         %a{:href => '/leads'} Leads
     %p
       %span Source:
-      %a{:href=> "#{INSTANCE_URL}/home/home.jsp", :target => "blank"}
-        =INSTANCE_URL
+      %a{:href=> "#{instance_url}/home/home.jsp", :target => "blank"}
+        =instance_url
+    %p
+      %a{:href => '/salesforce/instance'} Change Instance
     %p
       %a{:href=> "/chatter_user/me"} My Account

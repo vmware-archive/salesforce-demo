@@ -23,7 +23,7 @@ You can try it live at https://salesforce-demo.cloudfoundry.com/
 ## About the Salesforce code
 I updated the source code from a recipe submitted here to use the latest version of the OAuth2 gem
 http://developer.force.com/cookbook/recipe/interact-with-the-forcecom-rest-api-from-ruby
-I still had to monkey patch one item on the OAUth 2.0 client since Salesforce is using an old draft of OAuth 2
+I still had to monkey patch one item on the OAuth 2.0 client since Salesforce is using an old draft of OAuth 2 (draft 10)
 
 More info on Salesforce REST API here:
 http://www.salesforce.com/us/developer/docs/api_rest/Content/quickstart_code.htm
@@ -38,13 +38,17 @@ If you have not heard of Cloud Foundry here are some steps to get you started
 
 Register at http://cloudfoundry.com/
 
+Open a terminal window and run
+* gem install vmc
 * vmc target api.cloudfoundry.com
 * vmc login
-* Enter Credentials
+   * Enter Credentials
 
-Clone this repository if you have not done so already and make your modifications. Then deploy to Cloud Foundry
+Clone this repository if you have not done so already and make your modifications. Then deploy to Cloud Foundry. Example
 
 * vmc push salesforce-demo2
+
+Add your LinkedIn and Salesforce OAuth Credentials:
 
 * vmc env-add salesforce-demo2 salesforce_key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
 * vmc env-add salesforce-demo2 salesforce_secret=3746747173514820663
@@ -53,8 +57,9 @@ Clone this repository if you have not done so already and make your modification
 * vmc env-add salesforce-demo2 linkedin_key=12121218575
 * vmc env-add salesforce-demo2 linkedin_secret=erjerejrbnn293394j
 
+Create a redis service and bind it:
 * vmc create-service redis
 * vmc bind-service redis salesforce-demo2
 
-Then go to your cloud foundry app to test. Remember to use SSL
+Then go to your Cloud Foundry app to test. Remember to use SSL
 

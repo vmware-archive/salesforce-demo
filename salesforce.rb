@@ -29,7 +29,7 @@ def client
     ENV['salesforce_key'],
     ENV['salesforce_secret'],
     :site => instance_url,
-    :authorize_url =>'/services/oauth2/authorize',
+    :authorize_url =>'/services/oauth2/authorize?immediate=false',
     :token_url => '/services/oauth2/token',
     :ssl=>{
     :verify=>false

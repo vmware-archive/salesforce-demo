@@ -59,11 +59,14 @@ get '/salesforce/instance' do
 end
 
 post '/salesforce/instance' do
-  session.delete 'salesforce_access_token'
-  session['salesforce_instance_url'] = params[:url]
-  @access_token = ''
+  if (params['url'] && params['url']!= session['salesforce_instance_url'])
+    @my_old_url = session['salesforce_instance_url']  || 'na1'
+    session.delete 'salesforce_access_token'
+    session['salesforce_instance_url'] = params[:url]
+    @access_token = ''
+    @message = "Saved"
+  end
   @my_url = instance
-  @message = "Saved"
   haml :salesforce_instance
 end
 

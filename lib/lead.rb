@@ -29,7 +29,7 @@ get '/leads/create' do
   @messages = []
   @cart.each do |company|
     lead = {'FirstName' => "Trevor", 'LastName' => "Yang", 'Company' => "#{company['name']}"}
-    id = create 'account', lead.to_json
+    id = create 'lead', lead.to_json
     @messages << "Created lead <a href='/lead/#{id}'>#{id}</a>"
   end
 

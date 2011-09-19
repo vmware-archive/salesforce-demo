@@ -27,8 +27,17 @@ end
 get '/leads/create' do
   @title = "Lead Creation"
   @messages = []
+
+
   @cart.each do |company|
-    lead = {'FirstName' => "Trevor", 'LastName' => "Yang", 'Company' => "#{company['name']}"}
+    domains = nil
+    begin
+      domains = company['email_domains']['all']
+    rescue
+    end
+    gen = PersonGenerator.new (domains)
+    person = gen.next_person
+    lead = {'FirstName' => person.first_name, 'LastName' =>person.last_name, 'Email' => person.email, 'Company' => "#{company['name']}"}
     id = create 'lead', lead.to_json
     @messages << "Created lead <a href='/lead/#{id}'>#{id}</a>"
   end

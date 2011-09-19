@@ -17,6 +17,7 @@ require_relative 'lib/opportunity'
 require_relative 'lib/account'
 require_relative 'lib/lead'
 require_relative 'lib/company'
+require_relative 'lib/person'
 
 enable :sessions
 

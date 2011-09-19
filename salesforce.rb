@@ -1,7 +1,14 @@
 SALESFORCE_OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
 
 def get_access_token code
-  session['salesforce_access_token'] = client.auth_code.get_token(code, :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code').token
+  resp = client.auth_code.get_token(code, :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code')
+  session['salesforce_access_token'] = resp.token
+  x = resp.instance_url
+  if (x)
+    x.gsub!('https://', '')
+    x.gsub!('.salesforce.com', '')
+  end
+  session['salesforce_instance_url'] = x
 end
 
 def access_token

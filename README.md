@@ -26,30 +26,28 @@ vmc target api.cloudfoundry.com
 vmc login <email>
 ```
 
-Clone this repository if you have not done so already and make your modifications. Then deploy to Cloud Foundry. Example
+Clone this repository if you have not done so already and make your modifications.
+
+In particular you need to make a copy of `add_keys_sample.sh` as `add_keys.sh` and put in it your credentials:
+
+- LinkedIn App Key and Secret and
+- Salesforce App Key and Secret
+- Also for `salesforce_instance_url` use your instance like `na3`
+
+Then deploy to Cloud Foundry. Example
 
 ``` bash
 vmc push --nostart
 ```
 
-Add your LinkedIn and Salesforce OAuth Credentials:
+This push will use the `manifest.yml` to create a redis service and bind it to your app which has been created with a semi random name
+
+You can then add all the keys
 
 ``` bash
-export APP_NAME = salesforce-kjkej3k
-
-vmc env-add $APP_NAME salesforce_key=3MVB9y6x0357Hled43uoiWgfZ.8DAvMK3vZmbf6HCm_gBYFaHD6ZfPQA5SPUSNFsXfWNXcWqWet8iAxBT.UKP
-vmc env-add $APP_NAME salesforce_secret=3746747173514820663
-vmc env-add $APP_NAME salesforce_instance_url=https://c.na9.visual.force.com
-
-vmc env-add $APP_NAME linkedin_key=12121218575
-vmc env-add $APP_NAME linkedin_secret=erjerejrbnn293394j
-```
-
-Create a redis service and bind it:
-
-``` bash
-vmc create-service redis
-vmc bind-service redis salesforce-demo2
+export APP_NAME=<new_app_name>
+./add_keys.sh
+vmc start
 ```
 
 Then go to your Cloud Foundry app to test. Remember to use SSL

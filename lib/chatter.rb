@@ -10,7 +10,7 @@ get '/chatter_user/me' do
     @record_title = @item_data['name']
 
   rescue OAuth2::Error => e
-     puts "Got error getting chatter current user #{e.response.inspect }"
+     SalesforceDemo::Config.logger.error("Got error getting chatter current user #{e.response.inspect }")
   end
 
   haml :show_one

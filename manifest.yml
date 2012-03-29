@@ -1,0 +1,17 @@
+---
+applications:
+  .:
+    name: salesforce-demo-${random-word}
+    framework:
+      name: sinatra
+      info:
+        mem: 128M
+        description: Sinatra Application
+        exec: ruby demo.rb
+    url: ${name}.cloudfoundry.com
+    mem: 128M
+    runtime: ruby19
+    instances: 1
+    services:
+      redis-cart:
+        type: redis

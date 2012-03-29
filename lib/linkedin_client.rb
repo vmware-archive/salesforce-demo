@@ -117,7 +117,7 @@ get '/oauth1/callback' do
     atoken, asecret = lnk_client.authorize_from_request(session[:rtoken], session[:rsecret], pin)
     session[:atoken] = atoken
     session[:asecret] = asecret
-    puts "OAuth Got atoken #{session[:atoken]} asecret #{session[:asecret]}"
+    SalesforceDemo::Config.logger.info("OAuth Got atoken #{session[:atoken]} asecret #{session[:asecret]}")
     redirect session['url'] || '/'
   end
 end
@@ -126,13 +126,13 @@ def get_linkedin_client
   lnk_client = LinkedIn::Client.new(ENV['linkedin_key'], ENV['linkedin_secret'])
   if session[:atoken].nil?
     session['url'] = request.path
-    request_token = lnk_client.request_token(:oauth_callback => "http://salesforce-demo.cloudfoundry.com/oauth1/callback")
+    request_token = lnk_client.request_token(:oauth_callback => "#{SalesforceDemo::Config.host}/oauth1/callback")
     session[:rtoken] = request_token.token
     session[:rsecret] = request_token.secret
 
     redirect lnk_client.request_token.authorize_url
   else
-    puts "OAuth Using atoken #{session[:atoken]} asecret #{session[:asecret]}"
+    SalesforceDemo::Config.logger.info("OAuth Using atoken #{session[:atoken]} asecret #{session[:asecret]}")
     lnk_client.authorize_from_access(session[:atoken], session[:asecret])
   end
   lnk_client

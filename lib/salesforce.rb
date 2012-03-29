@@ -1,7 +1,11 @@
 SALESFORCE_OPTIONS = {:mode => :header, :header_format => 'OAuth %s'}
 
+def salesforce_callback
+  "#{SalesforceDemo::Config.host}/oauth/callback"
+end
+
 def get_access_token code
-  resp = client.auth_code.get_token(code, :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback", :grant_type => 'authorization_code')
+  resp = client.auth_code.get_token(code, :redirect_uri => salesforce_callback, :grant_type => 'authorization_code')
   session['salesforce_access_token'] = resp.token
   x = resp.instance_url
   if (x)
@@ -18,7 +22,7 @@ def access_token
     session['url'] = request.path
     redirect client.auth_code.authorize_url(
       :response_type => 'code',
-      :redirect_uri => "https://salesforce-demo.cloudfoundry.com/oauth/callback"
+      :redirect_uri => salesforce_callback
     )
   end
 end
@@ -56,7 +60,7 @@ def show_all object_type, options={}
       return response.parsed['records']
      end
   rescue OAuth2::Error => e
-    puts "Error getting #{object_type}s #{e.response.inspect}"
+    SalesforceDemo::Config.logger.error("Error getting #{object_type}s #{e.response.inspect}")
   end
   output
 end

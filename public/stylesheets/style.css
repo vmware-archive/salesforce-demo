@@ -15,7 +15,7 @@
 
 body {
   min-width: 960px;
-  background: #EEE url(/images/bg_main_dark.jpg);
+  background: #eeeedd url(/images/bg.png) no-repeat center right;
   font-family: 'Helvetica Neue', "Helvetica Neue Light", Helvetica;
 }
 
@@ -365,7 +365,7 @@ body {
 
 .top_boxes {
     min-height: 300px;
-
+    font-size: 10pt;
 }
 .white {
     margin-top: 10px;
@@ -381,7 +381,7 @@ body {
  text-align: center;
 }
 ul, p, li, span {
-    font-size: 9pt;
+    font-size: 11pt;
 }
 
 h1, h3 {

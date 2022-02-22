@@ -1,3 +1,5 @@
+# salesforce-demo is no longer actively maintained by VMware, Inc.
+
 ## Functionality
 This is a Web App which can be used to populate demo data in a Salesforce instance by seeding it with public company data from LinkedIn.
 The data that can be generated includes: Leads, Opportunities and Accounts.
